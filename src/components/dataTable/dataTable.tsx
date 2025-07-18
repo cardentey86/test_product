@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react"
-import type { ProductModel } from "../business/product/controller"
+import type { ProductModel } from "../../business/product/controller"
 import { BsSortAlphaDown, BsSortAlphaUp, BsSortNumericDown, BsSortNumericUp } from "react-icons/bs"
 import { TextInput } from "./textInput"
+import { SelectElements } from "./selectElements"
 
 type DataTableProps = {
     title: string
@@ -13,10 +14,13 @@ type OrderType = {
     type: string
 };
 
+const defaultElements = [10, 20, 30, 50, 100];
+
 export const DataTable = ({title, data}: DataTableProps) => {
 
   const [items, setItems] = useState<ProductModel[]>(data);  
   const [order, setOrder] = useState<OrderType>({field: 'id', type: 'asc'});  
+  const [element, setElement] = useState<number>(10);
 
   const Sort = () => {
     const sortedItems = [...items]; 
@@ -41,12 +45,16 @@ export const DataTable = ({title, data}: DataTableProps) => {
   };  
 
   useEffect(()=>{
-    setItems(data);
-  },[data]);
+    setItems(data.filter((_, index) => index < element));
+  },[data, element]);
 
   useEffect(()=>{
     Sort();
   },[order])
+
+  const handleElementsChange = (value: number) => {
+    setElement(value);
+  }
 
   const SwitchOrder = (pField: string) => {
     setOrder(prev => ({
@@ -65,7 +73,8 @@ export const DataTable = ({title, data}: DataTableProps) => {
   return (
     <div className="w-full">
         <h1 className="text-[22px] font-semibold p-2">{title}</h1>   
-        <div className="flex justify-end">
+        <div className="flex justify-between">
+            <SelectElements elements={defaultElements} onChange={(value)=>handleElementsChange(value)}/>
             <TextInput placeholder="Search..." clearable={true} onChange={(value) => Search(value.toLowerCase())}/>
         </div>     
         

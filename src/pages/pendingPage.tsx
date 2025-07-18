@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { GetProducts, type ProductModel } from "../business/product/controller";
-import { DataTable } from "../components/dataTable";
+import { DataTable } from "../components/dataTable/dataTable";
 
 export const PendingPage = () => {
 
